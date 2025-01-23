@@ -3,17 +3,56 @@ extend schema
     url: "https://specs.apollo.dev/federation/v2.10"
     import: ["@key"]
   )
+  @link(
+    url: "https://specs.apollo.dev/connect/v0.1"
+    import: ["@source", "@connect"]
+  )
+  @source(
+    name: "snowtooth_prod"
+    http: {
+      baseURL: "https://snowtooth-mountain-api.fly.dev"
+    }
+  )
 
 type Query {
+  hotelById(id: ID!): Hotel!
+    @connect(
+      source: "snowtooth_prod"
+      http: { GET: "/hotels/{$args.id}" }
+      selection: """
+      id
+      name
+      avgCost
+      """
+    )
   allHotels: [Hotel!]!
+    @connect(
+      source: "snowtooth_prod"
+      http: { GET: "/hotels" }
+      selection: """
+      id
+      name
+      avgCost
+      """
+    )
+  allLifts: [Lift!]!
+    @connect(
+      source: "snowtooth_prod"
+      http: { GET: "/lifts" }
+      selection: """
+      id
+      name
+      """
+    )
 }
 
 type Hotel {
   id: ID!
   name: String!
-  capacity: Int!
-  pool: Boolean
-  spa: Boolean
-  avgCost: Int
-  skiIn: Boolean
+  avgCost: Int!
+}
+
+type Lift {
+  id: ID!
+  name: String!
 }

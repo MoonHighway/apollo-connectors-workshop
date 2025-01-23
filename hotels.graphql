@@ -1,0 +1,19 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.10"
+    import: ["@key"]
+  )
+
+type Query {
+  allHotels: [Hotel!]!
+}
+
+type Hotel {
+  id: ID!
+  name: String!
+  capacity: Int!
+  pool: Boolean
+  spa: Boolean
+  avgCost: Int
+  skiIn: Boolean
+}
